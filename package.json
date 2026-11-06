@@ -1,6 +1,6 @@
 {
   "name": "srf-server",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "MIB Security Services IT Service Report system — Express + MySQL backend",
   "main": "server.js",
   "scripts": {

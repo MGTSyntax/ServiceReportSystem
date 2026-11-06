@@ -758,7 +758,10 @@
 
   function openPmModal(id) {
     if (id) {
-      const p = pmSchedules.find(x => x.id === id);
+      // const p = pmSchedules.find(x => x.id === id);
+      const p = pmSchedules.find(
+        x => String(x.id) === String(id)
+      );
       if (!p) return;
       editingPmId = id;
       $('pmModalTitle').textContent = 'Edit PM Schedule';
@@ -827,7 +830,10 @@
 
   // "Mark Done" opens a pre-filled New Report; saving it advances the PM's nextDue automatically.
   function startPmCompletion(id) {
-    const p = pmSchedules.find(x => x.id === id);
+    // const p = pmSchedules.find(x => x.id === id);
+    const p = pmSchedules.find(
+      x => String(x.id) === String(id)
+    );
     if (!p) return;
     pendingPmSchedule = id;
     resetForm();
@@ -919,9 +925,14 @@
     URL.revokeObjectURL(url);
   });
 
+  function findReportById(id) {
+    return reports.find(r => String(r.id) === String(id));
+  }
+
   /* ---------------- Detail modal ---------------- */
   function openDetail(id) {
-    const r = reports.find(x => x.id === id);
+    // const r = reports.find(x => x.id === id);
+    const r = findReportById(id);
     if (!r) return;
     currentDetailId = id;
     $('detailTitle').textContent = r.reportedBy || 'Untitled report';
@@ -1084,7 +1095,8 @@
 </html>`;
   }
   $('printReportBtn').addEventListener('click', () => {
-    const r = reports.find(x => x.id === currentDetailId);
+    // const r = reports.find(x => x.id === currentDetailId);
+    const r = findReportById(currentDetailId);
     if (!r) return;
     const win = window.open('', '_blank');
     if (!win) { alert('Please allow pop-ups to print this report.'); return; }
@@ -1094,7 +1106,8 @@
 
   $('archiveReportBtn').addEventListener('click', async () => {
     if (!currentDetailId) return;
-    const r = reports.find(x => x.id === currentDetailId);
+    // const r = reports.find(x => x.id === currentDetailId);
+    const r = findReportById(currentDetailId);
     if (!r) return;
     const updated = { ...r, archived: r.archived ? 0 : 1 };
     const saved = await Store.update(currentDetailId, updated);
@@ -1110,7 +1123,8 @@
   editBtn.textContent = 'Edit report';
   editBtn.style.marginRight = 'auto';
   editBtn.addEventListener('click', () => {
-    const r = reports.find(x => x.id === currentDetailId);
+    // const r = reports.find(x => x.id === currentDetailId);
+    const r = findReportById(currentDetailId);
     if (!r) return;
     closeDetail();
     populateForm(r);
