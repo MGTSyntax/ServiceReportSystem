@@ -1,0 +1,314 @@
+<!-- /index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIB Security Services — IT Service Report Form</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">IT</div>
+    <div class="brand-text">
+      <div class="brand-title">MIB Security Services, Inc.</div>
+      <div class="brand-sub">Information Technology Department</div>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" data-view="dashboard">Dashboard</button>
+    <button class="tab" data-view="pmschedule">PM Schedule</button>
+    <button class="tab" data-view="newreport">New Report</button>
+    <button class="tab" data-view="reports">All Reports</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- DASHBOARD -->
+  <div class="view active" id="view-dashboard">
+    <div class="dash-head">
+      <div>
+        <h1>DASHBOARD</h1>
+        <p class="sub">Yearly summary of IT service reports.</p>
+      </div>
+      <div class="year-select-wrap">
+        <label class="flabel">Year</label>
+        <select id="yearSelect"></select>
+      </div>
+    </div>
+    <div id="summaryWrap"></div>
+  </div>
+
+  <!-- PM SCHEDULE -->
+  <div class="view" id="view-pmschedule">
+    <div class="dash-head">
+      <div>
+        <h1>PM Schedule</h1>
+        <p class="sub">Preventive maintenance tracker for the year.</p>
+      </div>
+      <div class="pm-head-controls">
+        <div class="year-select-wrap">
+          <label class="flabel">Year</label>
+          <select id="pmYearSelect"></select>
+        </div>
+        <div class="year-select-wrap">
+          <label class="flabel">Dept</label>
+          <select id="pmDeptFilter">
+            <option value="">All depts</option>
+            <option value="OPS">OPS</option>
+            <option value="HO">HO</option>
+            <option value="OTH">OTH</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="pm-stat-grid" id="pmStatGrid"></div>
+
+    <div id="pmScheduleWrap"></div>
+
+    <div class="panel" style="margin-top:20px;">
+      <h2>Summary by Assigned To</h2>
+      <div id="pmSummaryWrap"></div>
+    </div>
+  </div>
+
+  <!-- NEW REPORT -->
+  <div class="view" id="view-newreport">
+    <h1 id="formTitle">New Service Report</h1>
+    <p class="sub">Follows form MIB-IT-RMF-001. Report No. is generated automatically.</p>
+
+    <div class="fsection">
+      <div class="fs-head">Report No.</div>
+      <div class="fs-body">
+        <div class="frow c2">
+          <div><label class="flabel">Report No.</label><input type="text" id="f_reportNo" readonly></div>
+          <div><label class="flabel">Date Reported</label><input type="date" id="f_dateReported"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fsection">
+      <div class="fs-head">A. Problem Details</div>
+      <div class="fs-body">
+        <div class="frow c1">
+          <div><label class="flabel">Problem Details</label><textarea id="f_problemDetails" rows="4"></textarea></div>
+        </div>
+        <div class="frow c3">
+          <div><label class="flabel">Attended By</label><input type="text" id="f_attendedByTop" placeholder="Initials, e.g. RAP"></div>
+          <div>
+            <label class="flabel">Detachment</label>
+            <select id="f_detachmentSelect"></select>
+            <input type="text" id="f_detachmentOther" placeholder="Enter new detachment name" style="margin-top:8px;display:none;">
+          </div>
+          <div><label class="flabel">Reported Thru</label><input type="text" id="f_reportedThru" placeholder="e.g. Call, Viber, Walk-in"></div>
+        </div>
+        <div class="frow c1">
+          <div><label class="flabel">Reported By</label><input type="text" id="f_reportedBy"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fsection">
+      <div class="fs-head">B. Initial Findings</div>
+      <div class="fs-body">
+        <div class="frow c1">
+          <div><textarea id="f_initialFindings" rows="4"></textarea></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fsection">
+      <div class="fs-head">C. Action Taken</div>
+      <div class="fs-body">
+        <div class="frow c1">
+          <div><textarea id="f_actionTaken" rows="4"></textarea></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fsection">
+      <div class="fs-head">D. Remarks</div>
+      <div class="fs-body">
+        <div class="frow c1">
+          <div><textarea id="f_remarks" rows="3"></textarea></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fsection">
+      <div class="fs-head">Classification <span class="fs-head-note">for tracking &amp; reports only — not on paper form</span></div>
+      <div class="fs-body">
+        <div class="frow c1">
+          <label class="flabel">Type</label>
+          <div class="chip-group" id="typeChips">
+            <div class="chip" data-val="HW">HW — Hardware</div>
+            <div class="chip" data-val="SW">SW — Software</div>
+            <div class="chip" data-val="OT">OT — Other</div>
+          </div>
+        </div>
+        <div class="frow c1">
+          <label class="flabel">Service Type</label>
+          <div class="chip-group" id="serviceTypeChips">
+            <div class="chip" data-val="PM">PM — Preventive Maintenance</div>
+            <div class="chip" data-val="ISSUANCE">Issuance</div>
+            <div class="chip" data-val="REPAIR">Repair</div>
+          </div>
+        </div>
+        <div class="frow c2" id="pmDetailsRow" style="display:none;">
+          <div><label class="flabel">Equipment / Scope (for PM Schedule)</label><input type="text" id="f_pmEquipment" placeholder="e.g. Biometric device, network switch"></div>
+          <div><label class="flabel">PM Interval (months)</label><input type="number" id="f_pmInterval" min="1" value="3"></div>
+        </div>
+        <div class="frow c1">
+          <label class="flabel">Dept</label>
+          <div class="chip-group" id="deptChips">
+            <div class="chip" data-val="OPS">OPS</div>
+            <div class="chip" data-val="HO">HO — Head Office</div>
+            <div class="chip" data-val="OTH">OTH — Other</div>
+          </div>
+        </div>
+        <div class="frow c1">
+          <label class="flabel">Assigned To</label>
+          <div class="chip-group" id="assignedChips">
+            <div class="chip" data-val="RAP">RAP</div>
+            <div class="chip" data-val="RCA">RCA</div>
+            <div class="chip" data-val="MGT">MGT</div>
+          </div>
+          <input type="text" id="f_assignedOther" placeholder="Other (if not listed above)" style="margin-top:8px;max-width:260px;">
+        </div>
+      </div>
+    </div>
+
+    <div class="fsection">
+      <div class="fs-head">Status &amp; Sign-off</div>
+      <div class="fs-body">
+        <div class="frow c1">
+          <label class="flabel">Status</label>
+          <div class="chip-group" id="statusChips">
+            <div class="chip" data-val="OP">OP — Open</div>
+            <div class="chip" data-val="PEN">PEN — Pending</div>
+            <div class="chip" data-val="CL">CL — Closed</div>
+          </div>
+        </div>
+        <div class="frow c4">
+          <div><label class="flabel">Date Attended</label><input type="date" id="f_dateAttended"></div>
+          <div><label class="flabel">Start Time (IN)</label><input type="time" id="f_timeIn"></div>
+          <div><label class="flabel">End Time (OUT)</label><input type="time" id="f_timeOut"></div>
+          <div><label class="flabel">Attended By (signed)</label><input type="text" id="f_attendedBySignature" placeholder="Printed name"></div>
+        </div>
+        <div class="frow c2">
+          <div><label class="flabel">Verified By</label><input type="text" id="f_verifiedBy"></div>
+          <div><label class="flabel">Noted By (Department Head)</label><input type="text" id="f_notedBy"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-ghost" id="cancelFormBtn">Cancel</button>
+      <button class="btn btn-primary" id="saveReportBtn">Save Report</button>
+    </div>
+  </div>
+
+  <!-- ALL REPORTS -->
+  <div class="view" id="view-reports">
+    <h1>All Reports</h1>
+    <p class="sub">Browse, search, and manage submitted service reports.</p>
+
+    <div class="toolbar">
+      <input type="text" id="searchInput" placeholder="Search report no, reported by, details...">
+      <select id="filterStatus">
+        <option value="">All statuses</option>
+        <option value="OP">Open</option>
+        <option value="PEN">Pending</option>
+        <option value="CL">Closed</option>
+      </select>
+      <select id="filterType">
+        <option value="">All types</option>
+        <option value="HW">Hardware</option>
+        <option value="SW">Software</option>
+        <option value="OT">Other</option>
+      </select>
+      <select id="filterDept">
+        <option value="">All depts</option>
+        <option value="OPS">OPS</option>
+        <option value="HO">HO</option>
+        <option value="OTH">OTH</option>
+      </select>
+      <label class="show-archived-toggle"><input type="checkbox" id="showArchived"> Show archived</label>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" id="exportCsvBtn">Export CSV</button>
+      <button class="btn btn-primary" id="newFromListBtn">+ New Report</button>
+    </div>
+
+    <div id="reportsTableWrap"></div>
+  </div>
+
+</div>
+
+<!-- Detail modal -->
+<div class="overlay" id="detailOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <h2 id="detailTitle" style="font-size:17px;margin-bottom:4px;"></h2>
+        <div class="muted" id="detailSub" style="font-size:12.5px;"></div>
+      </div>
+      <button class="modal-close" id="closeDetail">✕</button>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="printReportBtn">Print</button>
+      <button class="btn btn-ghost" id="archiveReportBtn">Archive report</button>
+      <button class="btn btn-primary" id="closeDetailBtn2">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- PM Schedule modal -->
+<div class="overlay" id="pmOverlay">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-head">
+      <div><h2 id="pmModalTitle" style="font-size:17px;margin-bottom:4px;">Add PM Schedule</h2></div>
+      <button class="modal-close" id="pmModalClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="frow c1"><div><label class="flabel">Detachment / Site</label><input type="text" id="pm_detachment"></div></div>
+      <div class="frow c2">
+        <div>
+          <label class="flabel">Dept</label>
+          <div class="chip-group" id="pmDeptChips">
+            <div class="chip" data-val="OPS">OPS</div>
+            <div class="chip" data-val="HO">HO</div>
+            <div class="chip" data-val="OTH">OTH</div>
+          </div>
+        </div>
+        <div>
+          <label class="flabel">Assigned To</label>
+          <div class="chip-group" id="pmAssignedChips">
+            <div class="chip" data-val="RAP">RAP</div>
+            <div class="chip" data-val="MGT">MGT</div>
+            <div class="chip" data-val="RCA">RCA</div>
+          </div>
+        </div>
+      </div>
+      <div class="frow c1"><div><label class="flabel">Equipment / Scope</label><input type="text" id="pm_equipment" placeholder="e.g. Biometric device, network switch"></div></div>
+      <div class="frow c2">
+        <div><label class="flabel">Interval (months)</label><input type="number" id="pm_interval" min="1" value="3"></div>
+        <div><label class="flabel">Next Due</label><input type="date" id="pm_nextDue"></div>
+      </div>
+      <div class="frow c1"><div><label class="flabel">Notes</label><textarea id="pm_notes" rows="2"></textarea></div></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" id="pmDeleteBtn" style="display:none;">Delete</button>
+      <button class="btn btn-primary" id="pmSaveBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
