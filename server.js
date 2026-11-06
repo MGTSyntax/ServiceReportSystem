@@ -112,12 +112,12 @@ app.put('/api/reports/:id', async (req, res)=>{
     const values = updateCols.map(c=> row[c]);
     values.push(req.params.id);
     const [result] = await pool.query(`UPDATE reports SET ${setClause} WHERE id = ?`, values);
-    if(result.affectedRows === 0) return res.status(404).json({ error: 'Report not found' });
+    if(result.affectedRows === 0) return res.status(404).json({ error: 'Report not found.' });
     const [rows] = await pool.query('SELECT * FROM reports WHERE id = ?', [req.params.id]);
     res.json(rows[0]);
   }catch(err){
     console.error(err);
-    res.status(500).json({ error: 'Failed to update report' });
+    res.status(500).json({ error: 'Failed to update report.' });
   }
 });
 
@@ -125,14 +125,13 @@ app.put('/api/reports/:id', async (req, res)=>{
 app.delete('/api/reports/:id', async (req, res)=>{
   try{
     const [result] = await pool.query('DELETE FROM reports WHERE id = ?', [req.params.id]);
-    if(result.affectedRows === 0) return res.status(404).json({ error: 'Report not found' });
+    if(result.affectedRows === 0) return res.status(404).json({ error: 'Report not found.' });
     res.status(204).end();
   }catch(err){
     console.error(err);
-    res.status(500).json({ error: 'Failed to delete report' });
+    res.status(500).json({ error: 'Failed to delete report.' });
   }
 });
-
 
 const PM_COLUMNS = [
   'id', 'detachment', 'dept', 'equipment', 'intervalMonths',
@@ -159,7 +158,7 @@ app.get('/api/pm-schedule', async (req, res)=>{
     res.json(rows);
   }catch(err){
     console.error(err);
-    res.status(500).json({ error: 'Failed to fetch PM schedule' });
+    res.status(500).json({ error: 'Failed to fetch PM schedule.' });
   }
 });
 
